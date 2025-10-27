@@ -3,6 +3,7 @@ package com.example.userservice.service;
 import com.example.userservice.entity.UserInfo;
 import com.example.userservice.repository.UserInfoRepository;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -17,22 +18,25 @@ public class JwtService {
     @Autowired
     private UserInfoRepository userInfoRepository;
 
-    public static final String SECRET ="1231231312313131313131313131313131313131313123424242424242342242";
+    @Value("${JWT_SECRET}")
+    private String secret;
 
-    public String generateToken(String userName) {
+    public String generateToken(String email) {
         Map<String,Object> claims = new HashMap<>();
         long currentTime = System.currentTimeMillis();
 
-        Optional<UserInfo> userOpt = userInfoRepository.findByName(userName);
+        Optional<UserInfo> userOpt = userInfoRepository.findByEmail(email);
 
         if (userOpt.isEmpty()) {
-            throw new RuntimeException("User not found");
+            throw new RuntimeException("Usuario no encontrado");
         }
 
         UserInfo user = userOpt.get();
 
         claims.put("id", user.getId());
-        claims.put("username", userName);
+        claims.put("email", email);
+        claims.put("name", user.getName());
+        claims.put("lastName", user.getLastName());
         claims.put("role", user.getRole().name());
 
         return Jwts.builder()
@@ -71,7 +75,7 @@ public class JwtService {
 
 
     private Key getSignKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

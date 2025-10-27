@@ -1,73 +1,63 @@
-package com.example.userservice.entity;
+package com.example.userservice.dto;
 
-import jakarta.persistence.*;
+import com.example.userservice.entity.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
-@Entity
-@Table(name ="app_user")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class UserRegistrationRequest {
 
-    @Column(name = "first_name", nullable = false)
     @NotBlank(message = "Nombres son obligatorios")
     private String name;
 
-    @Column(name = "last_name", nullable = false)
     @NotBlank(message = "Apellidos son obligatorios")
     private String lastName;
 
-    @Column(name = "birth_date", nullable = false)
     @NotNull(message = "Fecha de nacimiento es obligatoria")
     private LocalDate birthDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false)
     @NotNull(message = "Género es obligatorio")
-    private Gender gender;
+    private UserInfo.Gender gender;
 
-    @Column(name = "phone", nullable = false)
     @NotBlank(message = "Teléfono es obligatorio")
     @Pattern(regexp = "^[0-9]{10,15}$", message = "Teléfono debe contener entre 10 y 15 dígitos")
     private String phone;
 
-    @Column(name = "student_code", unique = true)
     private String studentCode;
 
-    @Column(name = "identity_document", nullable = false, unique = true)
     @NotBlank(message = "Documento de identidad es obligatorio")
     private String identityDocument;
 
-    @Column(name = "email", nullable = false, unique = true)
     @NotBlank(message = "Correo electrónico es obligatorio")
     @Email(message = "Formato de correo electrónico inválido")
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "rol", nullable = false)
     @NotNull(message = "Rol es obligatorio")
-    private Role role;
+    private UserInfo.Role role;
 
-    @Column(nullable = false)
     @NotBlank(message = "Contraseña es obligatoria")
     private String password;
 
-    public enum Role {
-        Estudiante, Administrador, Psicologo
-    }
-
-    public enum Gender {
-        M, F, Otro
+    public UserInfo toUserInfo() {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(this.name);
+        userInfo.setLastName(this.lastName);
+        userInfo.setBirthDate(this.birthDate);
+        userInfo.setGender(this.gender);
+        userInfo.setPhone(this.phone);
+        userInfo.setStudentCode(this.studentCode);
+        userInfo.setIdentityDocument(this.identityDocument);
+        userInfo.setEmail(this.email);
+        userInfo.setRole(this.role);
+        userInfo.setPassword(this.password);
+        return userInfo;
     }
 }

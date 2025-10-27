@@ -1,7 +1,7 @@
 package com.example.userservice.conftoller;
 
 import com.example.userservice.dto.AuthRequest;
-import com.example.userservice.entity.UserInfo;
+import com.example.userservice.dto.UserRegistrationRequest;
 import com.example.userservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,16 +20,16 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/registerUser")
-    public String addUser(@RequestBody @Valid UserInfo userInfo){
-        return authService.addUser(userInfo);
+    public String addUser(@RequestBody @Valid UserRegistrationRequest registrationRequest){
+        return authService.addUser(registrationRequest.toUserInfo());
     }
     @PostMapping("/generateToken")
     public String generateToken(@RequestBody AuthRequest authRequest){
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getName(), authRequest.getPassword()));
+        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if(authenticate.isAuthenticated()){
-            return authService.generateToken(authRequest.getName());
+            return authService.generateToken(authRequest.getEmail());
         }else{
-            throw  new RuntimeException("Invalid credential.");
+            throw  new RuntimeException("Credenciales inválidas.");
         }
 
     }
