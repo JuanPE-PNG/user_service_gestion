@@ -3,6 +3,7 @@ package com.example.userservice.conftoller;
 import com.example.userservice.dto.AuthRequest;
 import com.example.userservice.dto.UserRegistrationRequest;
 import com.example.userservice.service.AuthService;
+import com.example.userservice.entity.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,5 +39,10 @@ public class AuthController {
         authService.validateToken(token);
 
         return "Token is valid.";
+    }
+
+    @GetMapping("/psychologists")
+    public java.util.List<UserInfo> listPsychologists() {
+        return authService.getUsersByRole(UserInfo.Role.Psicologo);
     }
 }

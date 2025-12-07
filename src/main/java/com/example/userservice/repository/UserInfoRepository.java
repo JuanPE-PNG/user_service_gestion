@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
@@ -20,4 +21,5 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Integer> {
     boolean existsByStudentCode(String studentCode);
     
     boolean existsByIdentityDocument(String identityDocument);
+    List<UserInfo> findByRole(UserInfo.Role role);
 }

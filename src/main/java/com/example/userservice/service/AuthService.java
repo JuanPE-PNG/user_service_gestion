@@ -56,6 +56,10 @@ public class AuthService {
         return repository.findAll();
     }
 
+    public List<UserInfo> getUsersByRole(UserInfo.Role role) {
+        return repository.findByRole(role);
+    }
+
     public UserInfo getUserById(Integer id) {
         Optional<UserInfo> user = repository.findById(id);
         return user.orElse(null);

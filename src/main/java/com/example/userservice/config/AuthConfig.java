@@ -29,7 +29,7 @@ public class AuthConfig {
         return http.csrf(csrf->csrf.disable())
                 .cors(cors->cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth->auth
-                        .requestMatchers("/auth/registerUser","/auth/generateToken","/auth/validateToken")
+                        .requestMatchers("/auth/registerUser","/auth/generateToken","/auth/validateToken","/auth/psychologists")
                         .permitAll()
                         .requestMatchers("/admin/**").permitAll()
                         .anyRequest().authenticated()
